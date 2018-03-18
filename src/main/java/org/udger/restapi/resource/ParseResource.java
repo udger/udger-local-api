@@ -28,6 +28,7 @@ import javax.ws.rs.core.Response.Status;
 import org.udger.parser.UdgerIpResult;
 import org.udger.parser.UdgerUaResult;
 import org.udger.restapi.service.ParserService;
+import org.udger.restapi.service.ParserStatistics;
 
 /**
  * The Class ParseResource.
@@ -40,6 +41,9 @@ public class ParseResource {
     @Inject
     private ParserService parserService;
 
+    @Inject
+    private ParserStatistics parserStatistics;
+
     /**
      * Parses the ua
      *
@@ -50,6 +54,9 @@ public class ParseResource {
     @Path("/ua/{ua:.+}")
     @Produces({ MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN })
     public Response parseUa(@PathParam("ua") String ua) {
+
+        long tm = System.nanoTime();
+
         try {
             JsonObjectBuilder uaJson = doParseUa(ua);
 
@@ -66,6 +73,10 @@ public class ParseResource {
             LOG.log(Level.SEVERE, "parseUa(): failed.", e);
             return Response.status(Status.INTERNAL_SERVER_ERROR).build();
         }
+        finally {
+            parserStatistics.incRequestUA();
+            parserStatistics.addNanosRequestUA(System.nanoTime() - tm);
+        }
     }
 
     /**
@@ -79,6 +90,8 @@ public class ParseResource {
     @Path("/ip/{ip:.+}")
     @Produces({ MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN })
     public Response parseIp(@PathParam("ip") String ip) {
+
+        long tm = System.nanoTime();
 
         try {
             JsonObjectBuilder ipJson = doParseIp(ip);
@@ -99,6 +112,10 @@ public class ParseResource {
             LOG.log(Level.SEVERE, "parseIp(): failed.", e);
             return Response.status(Status.INTERNAL_SERVER_ERROR).build();
         }
+        finally {
+            parserStatistics.incRequestIP();
+            parserStatistics.addNanosRequestIP(System.nanoTime() - tm);
+        }
     }
     /**
      * Parses the ua / ip
@@ -110,6 +127,8 @@ public class ParseResource {
     @GET
     @Produces({ MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN })
     public Response parseUaIp(@QueryParam("ua") String ua, @QueryParam("ip") String ip) {
+
+        long tm = System.nanoTime();
 
         try {
             JsonObjectBuilder uaJson = doParseUa(ua);
@@ -140,6 +159,13 @@ public class ParseResource {
         } catch (Exception e) {
             LOG.log(Level.SEVERE, "parseUaIp(): failed.", e);
             return Response.status(Status.INTERNAL_SERVER_ERROR).build();
+        }
+        finally {
+            parserStatistics.incRequestUA();
+            parserStatistics.incRequestIP();
+            long dtm = System.nanoTime() - tm;
+            parserStatistics.addNanosRequestUA(dtm);
+            parserStatistics.addNanosRequestIP(dtm);
         }
     }
 
