@@ -33,10 +33,12 @@ public class StatisticsResource {
     public Response getStatistic() {
         JsonObjectBuilder jsonBuilder = Json.createObjectBuilder();
 
-        jsonBuilder.add("requests_ua", statistics.getRequestsUA())
-            .add("requests_ip", statistics.getRequestsIP())
-            .add("nanos_ua", statistics.getNanosRequestUA())
-            .add("nanos_ip", statistics.getNanosRequestIP());
+        jsonBuilder.add("total_requests_ua", statistics.getTotalRequestsUA())
+            .add("total_requests_ip", statistics.getTotalRequestsIP())
+            .add("total_nanos_ua", statistics.getTotalNanosUA())
+            .add("total_nanos_ip", statistics.getTotalNanosIP())
+            .add("avg_throughput_ua", statistics.getAvgThroughputUA())
+            .add("avg_throughput_ip", statistics.getAvgThroughputIP());
 
         return Response.ok(jsonBuilder.build().toString()).build();
     }

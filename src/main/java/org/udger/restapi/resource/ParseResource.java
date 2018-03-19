@@ -74,8 +74,7 @@ public class ParseResource {
             return Response.status(Status.INTERNAL_SERVER_ERROR).build();
         }
         finally {
-            parserStatistics.incRequestUA();
-            parserStatistics.addNanosRequestUA(System.nanoTime() - tm);
+            parserStatistics.reportUA(System.nanoTime() - tm);
         }
     }
 
@@ -113,8 +112,7 @@ public class ParseResource {
             return Response.status(Status.INTERNAL_SERVER_ERROR).build();
         }
         finally {
-            parserStatistics.incRequestIP();
-            parserStatistics.addNanosRequestIP(System.nanoTime() - tm);
+            parserStatistics.reportIP(System.nanoTime() - tm);
         }
     }
     /**
@@ -161,11 +159,9 @@ public class ParseResource {
             return Response.status(Status.INTERNAL_SERVER_ERROR).build();
         }
         finally {
-            parserStatistics.incRequestUA();
-            parserStatistics.incRequestIP();
             long dtm = System.nanoTime() - tm;
-            parserStatistics.addNanosRequestUA(dtm);
-            parserStatistics.addNanosRequestIP(dtm);
+            parserStatistics.reportUA(dtm);
+            parserStatistics.reportIP(dtm);
         }
     }
 

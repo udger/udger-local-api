@@ -37,7 +37,7 @@ public class ParserService implements Serializable {
      * @return the udger ua result
      * @throws SQLException the SQL exception
      */
-    public synchronized UdgerUaResult parseUa(String ua) throws SQLException {
+    public UdgerUaResult parseUa(String ua) throws SQLException {
         UdgerParser parser = null;
         try {
             parser = parserPool.borrowParser();
@@ -59,7 +59,7 @@ public class ParserService implements Serializable {
      * @throws SQLException the SQL exception
      * @throws UnknownHostException the unknown host exception
      */
-    public synchronized UdgerIpResult parseIp(String ip) throws SQLException, UnknownHostException {
+    public UdgerIpResult parseIp(String ip) throws SQLException, UnknownHostException {
         UdgerParser parser = null;
         try {
             parser = parserPool.borrowParser();
