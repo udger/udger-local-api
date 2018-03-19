@@ -29,6 +29,7 @@ import org.udger.parser.UdgerIpResult;
 import org.udger.parser.UdgerUaResult;
 import org.udger.restapi.service.ParserService;
 import org.udger.restapi.service.ParserStatistics;
+import org.udger.restapi.service.UdgerException;
 
 /**
  * The Class ParseResource.
@@ -69,12 +70,15 @@ public class ParseResource {
         } catch (SQLException e) {
             LOG.log(Level.SEVERE, "parseUa(): sql failed.", e);
             return Response.status(Status.INTERNAL_SERVER_ERROR).build();
+        } catch (UdgerException e) {
+            LOG.log(Level.WARNING, "parseUa(): failed." + e.getMessage());
+            return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
         } catch (Exception e) {
             LOG.log(Level.SEVERE, "parseUa(): failed.", e);
             return Response.status(Status.INTERNAL_SERVER_ERROR).build();
         }
         finally {
-            parserStatistics.reportUA(System.nanoTime() - tm);
+            parserStatistics.updateStatisticUA(System.nanoTime() - tm);
         }
     }
 
@@ -104,6 +108,9 @@ public class ParseResource {
         } catch (SQLException e) {
             LOG.log(Level.SEVERE, "parseIp(): sql failed.", e);
             return Response.status(Status.INTERNAL_SERVER_ERROR).build();
+        } catch (UdgerException e) {
+            LOG.log(Level.WARNING, "parseIP(): failed." + e.getMessage());
+            return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
         } catch (UnknownHostException e) {
             LOG.log(Level.WARNING, "parseIp(): host ip failed.", e);
             return Response.status(Status.BAD_REQUEST).entity("error: unkown host.").build();
@@ -112,7 +119,7 @@ public class ParseResource {
             return Response.status(Status.INTERNAL_SERVER_ERROR).build();
         }
         finally {
-            parserStatistics.reportIP(System.nanoTime() - tm);
+            parserStatistics.updateStatisticIP(System.nanoTime() - tm);
         }
     }
     /**
@@ -151,6 +158,9 @@ public class ParseResource {
         } catch (SQLException e) {
             LOG.log(Level.SEVERE, "parseUaIp(): sql failed.", e);
             return Response.status(Status.INTERNAL_SERVER_ERROR).build();
+        } catch (UdgerException e) {
+            LOG.log(Level.WARNING, "parseUaIP(): failed." + e.getMessage());
+            return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
         } catch (UnknownHostException e) {
             LOG.log(Level.WARNING, "parseUaIp(): host ip failed.", e);
             return Response.status(Status.INTERNAL_SERVER_ERROR).build();
@@ -160,12 +170,12 @@ public class ParseResource {
         }
         finally {
             long dtm = System.nanoTime() - tm;
-            parserStatistics.reportUA(dtm);
-            parserStatistics.reportIP(dtm);
+            parserStatistics.updateStatisticUA(dtm);
+            parserStatistics.updateStatisticIP(dtm);
         }
     }
 
-    private JsonObjectBuilder doParseUa(String ua) throws SQLException {
+    private JsonObjectBuilder doParseUa(String ua) throws SQLException, UdgerException {
 
         if (ua != null && ua.length() > 0) {
 
@@ -224,7 +234,7 @@ public class ParseResource {
         return null;
     }
 
-    private JsonObjectBuilder doParseIp(String ip) throws UnknownHostException, SQLException {
+    private JsonObjectBuilder doParseIp(String ip) throws UnknownHostException, SQLException, UdgerException {
 
         if (ip != null && ip.length() > 0) {
 

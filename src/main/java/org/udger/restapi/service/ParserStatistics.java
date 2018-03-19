@@ -11,6 +11,9 @@ package org.udger.restapi.service;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 
+/**
+ * The Class ParserStatistics.
+ */
 @ApplicationScoped
 public class ParserStatistics {
 
@@ -40,26 +43,48 @@ public class ParserStatistics {
         statisticIP = new StatisticRec();
     }
 
+    /**
+     * @return the total UA requests
+     */
     public int getTotalRequestsUA() {
         return statisticUA.totalRequests;
     }
 
+    /**
+     * @return the total IP requests IP
+     */
     public int getTotalRequestsIP() {
         return statisticIP.totalRequests;
     }
 
+    /**
+     * Gets the total nanoseconds in UA requests
+     *
+     * @return the total nanos UA
+     */
     public long getTotalNanosUA() {
         return statisticUA.totalNonos;
     }
 
+    /**
+     * @return the total nanos in IP request
+     */
     public long getTotalNanosIP() {
         return statisticIP.totalNonos;
     }
 
+    /**
+     * @return the avg request throughput UA
+     */
     public double getAvgThroughputUA() {
        return doGetAvgThroughput(statisticUA);
     }
 
+    /**
+     * Gets the avg throughput IP.
+     *
+     * @return the avg request throughput IP
+     */
     public double getAvgThroughputIP() {
        return doGetAvgThroughput(statisticIP);
     }
@@ -82,11 +107,21 @@ public class ParserStatistics {
         return 0.0;
     }
 
-    public void reportUA(long nanos) {
+    /**
+     * Update UA request statistic
+     *
+     * @param nanos the nanoseconds
+     */
+    public void updateStatisticUA(long nanos) {
         doReport(statisticUA, nanos);
     }
 
-    public void reportIP(long nanos) {
+    /**
+     * Update IP request statistic
+     *
+     * @param nanos the nanoseconds
+     */
+    public void updateStatisticIP(long nanos) {
         doReport(statisticIP, nanos);
     }
 
@@ -113,5 +148,4 @@ public class ParserStatistics {
             stat.lastSec = curSec;
         }
     }
-
 }

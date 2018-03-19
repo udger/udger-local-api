@@ -36,9 +36,11 @@ public class ParserService implements Serializable {
      * @param ua the ua
      * @return the udger ua result
      * @throws SQLException the SQL exception
+     * @throws UdgerException
      */
-    public UdgerUaResult parseUa(String ua) throws SQLException {
+    public UdgerUaResult parseUa(String ua) throws SQLException, UdgerException {
         UdgerParser parser = null;
+        checkPoolStarted();
         try {
             parser = parserPool.borrowParser();
             if (parser != null) {
@@ -58,9 +60,11 @@ public class ParserService implements Serializable {
      * @return the udger ip result
      * @throws SQLException the SQL exception
      * @throws UnknownHostException the unknown host exception
+     * @throws UdgerException
      */
-    public UdgerIpResult parseIp(String ip) throws SQLException, UnknownHostException {
+    public UdgerIpResult parseIp(String ip) throws SQLException, UnknownHostException, UdgerException {
         UdgerParser parser = null;
+        checkPoolStarted();
         try {
             parser = parserPool.borrowParser();
             if (parser != null) {
@@ -72,4 +76,11 @@ public class ParserService implements Serializable {
         }
         return null;
     }
+
+    private void checkPoolStarted() throws UdgerException {
+        if (!parserPool.isStarted()) {
+            throw new UdgerException("Pool is not started. DbFile missing or incorrect.");
+        }
+    }
+
 }

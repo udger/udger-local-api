@@ -8,7 +8,6 @@
 */
 package org.udger.restapi.resource;
 
-import java.net.MalformedURLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -46,7 +45,7 @@ public class SetResource {
      */
     @GET
     @Path("/key/{key}")
-    @Produces({ MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN })
+    @Produces(MediaType.TEXT_PLAIN)
     public Response setKey(@PathParam("key") String key) {
         if (key != null && !key.isEmpty()) {
             dbFileManager.setClientKey(key);
@@ -68,9 +67,6 @@ public class SetResource {
             poolManager.updateDb();
             LOG.info("Udger db updated.");
             return Response.ok("OK").build();
-        } catch (MalformedURLException e) {
-            LOG.log(Level.WARNING, "updateData(): maformed URL: " + e.getMessage());
-            return Response.status(Status.BAD_REQUEST).entity("error: Invalid update url.").build();
         } catch (UdgerException e) {
             LOG.log(Level.WARNING, "updateData(): failed." + e.getMessage());
             return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
@@ -88,7 +84,7 @@ public class SetResource {
      */
     @GET
     @Path("/autoupdate/{time}")
-    @Produces({ MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN })
+    @Produces(MediaType.TEXT_PLAIN)
     public Response autoUpdate(@PathParam("key") String time) {
         if (poolManager.scheduleUpdateDb(time)) {
             return Response.ok("OK").build();

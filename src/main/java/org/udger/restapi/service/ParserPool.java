@@ -28,20 +28,36 @@ public class ParserPool {
     private static final Logger LOG =  Logger.getLogger(ParserPool.class.getName());
 
     private static final int INITIAL_POOL_SIZE = 5;
-    private static final int INITIAL_PARSER_CACHE_SIZE = 10000;
+    private static final int INITIAL_PARSER_CACHE_SIZE = 10;
 
     @Inject
     private DbFileManager dbFileManager;
 
-    private LinkedBlockingQueue<UdgerParser> borrowingPool;
+    private volatile LinkedBlockingQueue<UdgerParser> borrowingPool;
     private LinkedBlockingQueue<UdgerParser> pool = new LinkedBlockingQueue<>();
     private int poolSize;
-    private boolean closed = true;
+    private boolean parsersStopped = true;        // means all Parsers in pool is finished
+    private boolean poolStarted = false;
 
     @PostConstruct
     public void init() {
         pool = borrowingPool = new LinkedBlockingQueue<>();
-        startPool();
+        try {
+            if (dbFileManager.hasSqliteDbFile()) {
+                startPool(dbFileManager.getDbFileName());
+            } else {
+                LOG.info("Pool not poolStarted, no DB file.");
+            }
+        } catch (ClassNotFoundException e) {
+            LOG.log(Level.SEVERE, "Parse pool init failed.", e);
+        }
+    }
+
+    /**
+     * @return true, if pool is poolStarted
+     */
+    public boolean isStarted() {
+        return poolStarted;
     }
 
     /**
@@ -73,13 +89,18 @@ public class ParserPool {
         }
     }
 
+    /**
+     * Close pool.
+     *
+     * @param shutdown the shutdown
+     */
     public void closePool(boolean shutdown) {
         borrowingPool = shutdown ? null : new LinkedBlockingQueue<>();
         try {
             int cnt = poolSize;
             while (cnt > 0) {
                 try {
-                    UdgerParser parser = borrowParser();
+                    UdgerParser parser = pool.take();
                     cnt--;
                     parser.close();
                 } catch (Exception e) {
@@ -89,25 +110,29 @@ public class ParserPool {
         } finally {
             pool = borrowingPool;
         }
-        closed = true;
+        parsersStopped = true;
     }
 
-    public void startPool() {
-        if (closed && pool != null) {
-            buildPool(pool, INITIAL_POOL_SIZE, dbFileManager.getDbFileName(), INITIAL_PARSER_CACHE_SIZE);
-            closed = false;
+    /**
+     * Start pool.
+     */
+    public void startPool(String dbFileName) {
+        if (parsersStopped && pool != null && pool.isEmpty()) {
+            buildPool(INITIAL_POOL_SIZE, dbFileName, INITIAL_PARSER_CACHE_SIZE);
         }
     }
 
-    private void buildPool(LinkedBlockingQueue<UdgerParser> clstr, int clstrSize, String dbFileName, int cacheSize) {
+    private void buildPool(int clstrSize, String dbFileName, int cacheSize) {
         try {
             Class.forName("org.sqlite.JDBC");
             ParserDbData dbData = new UdgerParser.ParserDbData(dbFileName);
             poolSize = 0;
             for (int i=0; i < clstrSize; i++) {
-                clstr.put(new UdgerParser(dbData, cacheSize));
+                pool.put(new UdgerParser(dbData, cacheSize));
                 poolSize ++;
             }
+            parsersStopped = false;
+            poolStarted = true;
         } catch (InterruptedException e) {
             LOG.log(Level.SEVERE, "buildPool(): interupted.", e);
         } catch (ClassNotFoundException e) {

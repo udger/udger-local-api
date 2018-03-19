@@ -26,11 +26,11 @@ public class PoolManager {
 
     @Inject
     private ParserPool parserPool;
-
     @Inject
     private DbFileManager dbFileManager;
 
     private TaskExecutor task;
+    private Boolean updatingDb = new Boolean(false);
 
     /**
      * Download DB file and restart pool
@@ -39,23 +39,40 @@ public class PoolManager {
      * @throws MalformedURLException the malformed URL exception
      * @throws IOException Signals that an I/O exception has occurred.
      * @throws UdgerException the udger exception
+     * @throws ClassNotFoundException
      */
-    public boolean updateDb() throws MalformedURLException, IOException, UdgerException {
-       dbFileManager.downloadDbFile();
-       return restartPool();
+    public boolean updateDb() throws UdgerException, IOException, ClassNotFoundException {
+        if (!updatingDb) {
+            boolean doUpdate = false;
+            synchronized (updatingDb) {
+                if (!updatingDb) {
+                    updatingDb = true;
+                    doUpdate = true;
+                }
+            }
+            if (doUpdate) {
+                try {
+                    dbFileManager.downloadDbFile();
+                    return restartPool();
+                } finally {
+                    updatingDb = false;
+                }
+            }
+        }
+        throw new UdgerException("DB is already updating!");
     }
 
     /**
-     * Restart pool -
+     * Restart pool
      *
      * @return true, if successful
      */
     private boolean restartPool() {
-        boolean result = true;
+       boolean result = true;
        if (dbFileManager.hasNewFile()) {
            parserPool.closePool(false);
-           result = dbFileManager.moveDbFile();
-           parserPool.startPool();
+           result = dbFileManager.updateDbFile();
+           parserPool.startPool(dbFileManager.getDbFileName());
        }
        return result;
     }
