@@ -85,7 +85,7 @@ public class SetResource {
     @GET
     @Path("/autoupdate/{time}")
     @Produces(MediaType.TEXT_PLAIN)
-    public Response autoUpdate(@PathParam("key") String time) {
+    public Response autoUpdate(@PathParam("time") String time) {
         if (poolManager.scheduleUpdateDb(time)) {
             return Response.ok("OK").build();
         }

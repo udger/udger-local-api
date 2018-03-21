@@ -71,8 +71,10 @@ public class TaskExecutor {
         Runnable taskWrapper = new Runnable() {
             @Override
             public void run() {
-                task.run();
-                start();
+                if (!canceled) {
+                    task.run();
+                    start();
+                }
             }
         };
         long delay = computeNextDelay(targetHour, targetMin, 0);

@@ -101,7 +101,7 @@ public class DbFileManager {
                 ReadableByteChannel rbc = Channels.newChannel(website.openStream());
                 fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
             }
-            if (!doCheckIsSqlLiteFile(newDbFileName)) {
+            if (!doCheckSqlLiteFileStructure(newDbFileName)) {
                 throw new UdgerException("Downloaded file is not SQLite file!");
             }
             return true;
@@ -117,10 +117,10 @@ public class DbFileManager {
      */
     public boolean hasSqliteDbFile() throws ClassNotFoundException {
         String dbFn = getDbFileName();
-        return new File(dbFn).isFile() && doCheckIsSqlLiteFile(dbFn);
+        return new File(dbFn).isFile() && doCheckSqlLiteFileStructure(dbFn);
     }
 
-    public boolean doCheckIsSqlLiteFile(String dbfn) throws ClassNotFoundException {
+    public boolean doCheckSqlLiteFileStructure(String dbfn) throws ClassNotFoundException {
         Connection conn = null;
         try {
             Class.forName("org.sqlite.JDBC");

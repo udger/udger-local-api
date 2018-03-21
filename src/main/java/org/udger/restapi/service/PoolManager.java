@@ -30,7 +30,8 @@ public class PoolManager {
     private DbFileManager dbFileManager;
 
     private TaskExecutor task;
-    private Boolean updatingDb = new Boolean(false);
+    private Object updatingLock = new Object();
+    private Boolean updatingDb = false;
 
     /**
      * Download DB file and restart pool
@@ -44,7 +45,7 @@ public class PoolManager {
     public boolean updateDb() throws UdgerException, IOException, ClassNotFoundException {
         if (!updatingDb) {
             boolean doUpdate = false;
-            synchronized (updatingDb) {
+            synchronized (updatingLock) {
                 if (!updatingDb) {
                     updatingDb = true;
                     doUpdate = true;
@@ -53,7 +54,11 @@ public class PoolManager {
             if (doUpdate) {
                 try {
                     dbFileManager.downloadDbFile();
-                    return restartPool();
+                    boolean result = restartPool();
+                    if (result) {
+                        LOG.info("DB updated.");
+                    }
+                    return result;
                 } finally {
                     updatingDb = false;
                 }
@@ -97,7 +102,7 @@ public class PoolManager {
                            }
                            task.cancel();
                        }
-                       task = new TaskExecutor(()-> scheduledUpdateDb(),hr, min);
+                       task = new TaskExecutor(()-> scheduledUpdateDb(), hr, min);
                        task.start();
                    }
                }
