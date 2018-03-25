@@ -42,7 +42,7 @@ public class PoolManager {
      * @throws UdgerException the udger exception
      * @throws ClassNotFoundException
      */
-    public boolean updateDb() throws UdgerException, IOException, ClassNotFoundException {
+    public boolean updateDb(boolean doDownloadDbFromUrl) throws UdgerException, IOException, ClassNotFoundException {
         if (!updatingDb) {
             boolean doUpdate = false;
             synchronized (updatingLock) {
@@ -53,7 +53,9 @@ public class PoolManager {
             }
             if (doUpdate) {
                 try {
-                    dbFileManager.downloadDbFile();
+                    if (doDownloadDbFromUrl) {
+                        dbFileManager.downloadDbFile();
+                    }
                     boolean result = restartPool();
                     if (result) {
                         LOG.info("DB updated.");
@@ -113,7 +115,7 @@ public class PoolManager {
 
     private void scheduledUpdateDb() {
         try {
-            updateDb();
+            updateDb(true);
         } catch (Exception e) {
             LOG.log(Level.WARNING, "scheduledUpdateDb(): failed", e);
         }

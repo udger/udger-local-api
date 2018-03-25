@@ -19,6 +19,6 @@ public class PingResource {
     @Produces(MediaType.TEXT_PLAIN)
     public Response getStatistic() {
         parserStatistics.updateStatisticUA(0);
-        return Response.ok().build();
+        return Response.ok().entity("OK").build();
     }
 }

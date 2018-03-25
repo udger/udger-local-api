@@ -11,6 +11,8 @@ package org.udger.restapi.service;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.channels.Channels;
@@ -70,7 +72,7 @@ public class DbFileManager {
         if (dbFileName == null) {
             synchronized (this) {
                 if (dbFileName == null) {
-                    dbFileName = System.getProperty("udgerdb");
+                    dbFileName = System.getProperty("udger.db");
                     if (dbFileName == null) {
                         dbFileName = DEFAULT_FILE_NAME;
                     }
@@ -169,4 +171,19 @@ public class DbFileManager {
         return false;
     }
 
+    /**
+     * Update db file from stream.
+     *
+     * @param is the is
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
+    public void updateDbFileFromStream(InputStream is) throws IOException {
+        try (OutputStream os = new FileOutputStream(new File(getNewDbFileName()))) {
+            int read = 0;
+            byte[] bytes = new byte[1024];
+            while ((read = is.read(bytes)) != -1) {
+                os.write(bytes, 0, read);
+            }
+        }
+   }
 }

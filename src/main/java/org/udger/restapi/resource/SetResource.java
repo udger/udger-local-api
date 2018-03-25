@@ -8,11 +8,15 @@
 */
 package org.udger.restapi.resource;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.inject.Inject;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -20,6 +24,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import org.apache.cxf.jaxrs.ext.multipart.Attachment;
+import org.apache.cxf.jaxrs.ext.multipart.Multipart;
 import org.udger.restapi.service.DbFileManager;
 import org.udger.restapi.service.PoolManager;
 import org.udger.restapi.service.UdgerException;
@@ -64,7 +70,7 @@ public class SetResource {
     @Produces(MediaType.TEXT_PLAIN)
     public Response updateData() {
         try {
-            poolManager.updateDb();
+            poolManager.updateDb(true);
             LOG.info("Udger db updated.");
             return Response.ok("OK").build();
         } catch (UdgerException e) {
@@ -92,4 +98,23 @@ public class SetResource {
         return Response.status(Status.BAD_REQUEST).build();
     }
 
+    @POST
+    @Path("/datafile")
+    @Produces(MediaType.TEXT_PLAIN)
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    public Response uploadDbFile(@Multipart("file") Attachment attachment) throws IOException {
+
+        try {
+            dbFileManager.updateDbFileFromStream(attachment.getObject(InputStream.class));
+            poolManager.updateDb(false);
+            LOG.info("Udger db uploaded and updated.");
+            return Response.ok("OK").build();
+        } catch (UdgerException e) {
+            LOG.log(Level.WARNING, "uploadDbFile(): failed." + e.getMessage());
+            return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
+        } catch (Exception e) {
+            LOG.log(Level.SEVERE, "uploadDbFile(): failed.", e);
+            return Response.status(Status.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 }
