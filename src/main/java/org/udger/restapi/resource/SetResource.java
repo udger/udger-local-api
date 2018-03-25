@@ -8,6 +8,7 @@
 */
 package org.udger.restapi.resource;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.logging.Level;
@@ -24,7 +25,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import org.apache.cxf.jaxrs.ext.multipart.Attachment;
 import org.apache.cxf.jaxrs.ext.multipart.Multipart;
 import org.udger.restapi.service.DbFileManager;
 import org.udger.restapi.service.PoolManager;
@@ -102,10 +102,10 @@ public class SetResource {
     @Path("/datafile")
     @Produces(MediaType.TEXT_PLAIN)
     @Consumes(MediaType.MULTIPART_FORM_DATA)
-    public Response uploadDbFile(@Multipart("file") Attachment attachment) throws IOException {
-
+    public Response uploadDbFile(@Multipart(value="file", type="application/octet-stream") byte data[]) throws IOException {
         try {
-            dbFileManager.updateDbFileFromStream(attachment.getObject(InputStream.class));
+            InputStream is = new ByteArrayInputStream(data);
+            dbFileManager.updateDbFileFromStream(is);
             poolManager.updateDb(false);
             LOG.info("Udger db uploaded and updated.");
             return Response.ok("OK").build();
