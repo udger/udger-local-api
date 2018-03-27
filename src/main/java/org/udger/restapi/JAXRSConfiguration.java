@@ -11,6 +11,6 @@ package org.udger.restapi;
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
 
-@ApplicationPath("v3")
+@ApplicationPath("")
 public class JAXRSConfiguration extends Application {
 }
