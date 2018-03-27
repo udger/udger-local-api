@@ -2,7 +2,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.udger.parser</groupId>
-    <artifactId>udger-webservice</artifactId>
+    <artifactId>udger-local-api</artifactId>
     <version>1.1.0</version>
     <packaging>war</packaging>
     <dependencies>
@@ -31,7 +31,7 @@
         </dependency>
     </dependencies>
     <build>
-        <finalName>udger-webservice</finalName>
+        <finalName>udger-local-api</finalName>
     </build>
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
