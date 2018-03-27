@@ -1,80 +1,215 @@
-FORMAT: 1A
-HOST: http://polls.apiblueprint.org/
+XFORMAT: 1A
+HOST: http://udger-webservice.org/
 
-# local-api
+# udger-webservice
 
-Polls is a simple API allowing consumers to view polls and vote in them.
+Udger-webservice REST-API provides access to [udger-webservice](https://github.com/udger/udger-java) docker container.
 
-## Questions Collection [/questions]
+# API Versions and changes
 
-### List All Questions [GET]
+# Group parse
+
+## Parse UA (user agent string) [/parse/ua/{ua}]
+
+Parse single user agent string.
+
++ Parameters
+
+    + ua: 1 (string) - base64 encoded user agent string
+
+### GET
+
+Get parsed user agent.
 
 + Response 200 (application/json)
 
-        [
-            {
-                "question": "Favourite programming language?",
-                "published_at": "2015-08-05T08:40:51.620Z",
-                "choices": [
-                    {
-                        "choice": "Swift",
-                        "votes": 2048
-                    }, {
-                        "choice": "Python",
-                        "votes": 1024
-                    }, {
-                        "choice": "Objective-C",
-                        "votes": 512
-                    }, {
-                        "choice": "Ruby",
-                        "votes": 256
-                    }
-                ]
-            }
-        ]
+    + Attributes (UaResult)
 
-### Create a New Question [POST]
++ Response 400 (application/text)
+    
 
-You may create your own question using this action. It takes a JSON
-object containing a question and a collection of answers in the
-form of choices.
+## Parse IP [/parse/ip/{ip}]
 
-+ Request (application/json)
+Parse single IP string.
+
++ Parameters
+
+    + ip: 1 (string) - IP string
+
+### GET
+
+Get parsed IP.
+
++ Response 200 (application/json)
+
+    + Attributes (IpResult)
+
++ Response 400 (application/text)
+
+    
+## Parse UA IP [/parse/ua={ua}&ip={ip}]
+
+Parse single user agent string.
+
++ Request
+
+    + ua: 1 (string) - base64 encoded user agent string
+    + ip: 1 (string) - IP string
+
++ Response 200 (application/json)
 
         {
-            "question": "Favourite programming language?",
-            "choices": [
-                "Swift",
-                "Python",
-                "Objective-C",
-                "Ruby"
-            ]
+            "user_agent": { (UaResult) },
+            "ip_address": { (IpResult) }
         }
+        
++ Response 400
 
-+ Response 201 (application/json)
 
-    + Headers
+# Group set
 
-            Location: /questions/2
+Handles database file downloading / updating.
 
-    + Body
+## Set client key [/set/key/{key}]
 
-            {
-                "question": "Favourite programming language?",
-                "published_at": "2015-08-05T08:40:51.620Z",
-                "choices": [
-                    {
-                        "choice": "Swift",
-                        "votes": 0
-                    }, {
-                        "choice": "Python",
-                        "votes": 0
-                    }, {
-                        "choice": "Objective-C",
-                        "votes": 0
-                    }, {
-                        "choice": "Ruby",
-                        "votes": 0
-                    }
-                ]
-            }
+Set client key used in db update operation.
+
++ Parameters
+
+    + key: XYZ (string) - client kkey
+
+### GET
+
+Set client key
+
++ Response 200 (application/text)
+
+OK
+
++ Response 400 (application/text)
+
+Invalid key
+
+## Set client key [/set/updatedata]
+
+Update database file from http://data.udger.com/{key}
+
+### GET
+
+Update database file
+
++ Response 200 (application/text)
+
++ Response 400 (application/text)
+
+## Set autoupdate time [/set/autoupdate/{time}]
+
+Set time of periodic autoupdate
+
++ Parameters
+
+    + time:  10:30 (string) - set time of periodic update in form HH:mm
+
+### GET
+
+Set time of periodic autoupdate
+
++ Response 200 (application/text)
+
++ Response 400 (application/text)
+
+## Upload db data file [/set/datafile]
+
+Set time of periodic autoupdate
+
+
+# Group statistic
+
+## Set autoupdate time [/statistic]
+
+Gets parser statistics.
+
+### GET
+
++ Response 200 (application/json)
+
+
+
+# Data Structures
+
+## UaResult (object)
+
+- user_agent: (string)
+- ua_string: Mozilla/5.0 compatible; MSIE 10.0; Windows NT 6.1; Trident/6.0 (string)
+- ua_class: Browser (string)
+- ua_class_code: browser (string)
+- ua: IE 10.0 (string)
+- ua_version: 10.0 (string)
+- ua_version_major: 10 (string)
+- ua_uptodate_current_version: 11 (string)
+- ua_family: IE (string)
+- ua_family_code: ie (string)
+- ua_family_homepage: https://en.wikipedia.org/wiki/Internet_Explorer (string)
+- ua_family_vendor: Microsoft Corporation. (string)
+- ua_family_vendor_code: microsoft_corporation (string)
+- ua_family_vendor_homepage: https://www.microsoft.com/about/ (string)
+- ua_family_icon: msie.png (string)
+- ua_family_icon_big: msie_big.png (string)
+- ua_family_info_url: https://udger.com/resources/ua-list/browser-detail?browser=IE (string)
+- ua_engine: Trident (string)
+- os: Windows 7 (string)
+- os_code: windows_7 (string)
+- os_homepage: https://en.wikipedia.org/wiki/Windows_7 (string)
+- os_icon: windows-7.png (string)
+- os_icon_big: windows-7_big.png (string)
+- os_info_url: https://udger.com/resources/ua-list/os-detail?os=Windows 7 (string)
+- os_family: Windows (string)
+- os_family_code: windows (string)
+- os_family_vendor: Microsoft Corporation. (string)
+- os_family_vendor_code: microsoft_corporation (string)
+- os_family_vendor_homepage: https://www.microsoft.com/about/ (string)
+- device_class: Desktop (string)
+- device_class_code: desktop (string)
+- device_class_icon: desktop.png (string)
+- device_class_icon_big: desktop_big.png (string)
+- device_class_info_url: https://udger.com/resources/ua-list/device-detail?device=Desktop (string)
+- device_brand:  (string)
+- device_brand_code:  (string)
+- device_brand_homepage:  (string)
+- device_brand_icon:  (string)
+- device_brand_icon_big:  (string)
+- device_brand_info_url:  (string)
+- crawler_last_seen:  (string)
+- crawler_category:  (string)
+- crawler_category_code:  (string)
+- crawler_respect_robotstxt:  (string)
+
+## IpResult (object)
+
+- ip: 66.249.64.1 (string)
+- ip_ver: 4 (number)
+- ip_classification: Crawler (string)
+- ip_classification_code: crawler (string)
+- ip_hostname: crawl-66-249-64-1.googlebot.com (string)
+- ip_last_seen: 2016-01-12 08:31:41 (string)
+- ip_country: United States (string)
+- ip_country_code: US (string)
+- ip_city: Mountain View (string)
+- crawler_name: Googlebot/2.1 (string)
+- crawler_ver: 2.1 (string)
+- crawler_ver_major: 2 (string)
+- crawler_family: Googlebot (string)
+- crawler_family_code: googlebot (string)
+- crawler_family_homepage: http://www.google.com/bot.html (string)
+- crawler_family_vendor: Google Inc. (string)
+- crawler_family_vendor_code: google_inc (string)
+- crawler_family_vendor_homepage: https://www.google.com/about/company/ (string)
+- crawler_family_icon: bot_googlebot.png (string)
+- crawler_family_info_url: https://udger.com/resources/ua-list/bot-detail?bot=Googlebot (string)
+- crawler_last_seen: 2016-03-14 07:40:11 (string)
+- crawler_category: Search engine bot (string)
+- crawler_category_code: search_engine_bot (string)
+- crawler_respect_robotstxt: yes (string)
+- datacenter_name: (string)
+- datacenter_name_code: (string)
+- datacenter_homepage: (string)
