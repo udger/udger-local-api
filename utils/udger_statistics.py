@@ -7,13 +7,13 @@ import json
 from time import sleep
 
 try:
-    with urllib.request.urlopen("http://127.0.0.1:8080/udger-webservice/statistic") as response:
+    with urllib.request.urlopen("http://127.0.0.1:8080/udger-local-api/statistic") as response:
         js = json.loads(response.read())
-        print("UA count :" + str(js['requests_ua']))
-        print("UA secs  :" + str(js['nanos_ua']/1000000000))
-        print("UA req/s :" + str(js['requests_ua'] * 1000000000 / js['nanos_ua']))
-        print("IP count :" + str(js['requests_ip']))
-        print("IP secs  :" + str(js['nanos_ip']/1000000000))
-        print("IP req/s :" + str(js['requests_ip'] * 1000000000 / js['nanos_ua']))
+        print("UA count :" + str(js['total_requests_ua']))
+        print("UA secs  :" + str(js['total_nanos_ua']/1000000000))
+        print("UA avg req/s :" + str(js['avg_throughput_ua']))
+        print("IP count :" + str(js['total_requests_ip']))
+        print("IP secs  :" + str(js['total_nanos_ip']/1000000000))
+        print("IP avg eq/s :" + str(js['avg_throughput_ip']))
 except urllib.error.HTTPError as e:
     pass
