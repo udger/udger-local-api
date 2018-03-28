@@ -24,4 +24,3 @@ Udger-local-api is Java application that can be parameterized using following pr
 * `-Dudger.cachesize=N` where `N` is number of items in parser LRU cache. Default is `10000`
 * `-Dudger.clientkey=KEY` where `KEY` is client key used for access dbfile from `http://data.udger.com/`. Default value is empty.
 * `-Dudger.db=dbFile` where `dbFile` is path to database file. Default value is `/udgerdb/udgerdb_v3.dat`.
-* `-Dudger.db=dbFile` where `dbFile` is path to database file. Default value is `/udgerdb/udgerdb_v3.dat`.

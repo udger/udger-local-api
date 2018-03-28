@@ -8,11 +8,13 @@
 */
 package org.udger.restapi.resource;
 
+import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.zip.GZIPInputStream;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -98,6 +100,13 @@ public class SetResource {
         return Response.status(Status.BAD_REQUEST).build();
     }
 
+    /**
+     * Upload db file. Possibly in gzip format.
+     *
+     * @param data the data
+     * @return the response
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
     @POST
     @Path("/datafile")
     @Produces(MediaType.TEXT_PLAIN)
@@ -105,6 +114,9 @@ public class SetResource {
     public Response uploadDbFile(@Multipart(value="file", type="application/octet-stream") byte data[]) throws IOException {
         try {
             InputStream is = new ByteArrayInputStream(data);
+            if (isGZipped(is)) {
+                is = new GZIPInputStream(is);
+            }
             dbFileManager.updateDbFileFromStream(is);
             poolManager.updateDb(false);
             LOG.info("Udger db uploaded and updated.");
@@ -116,5 +128,21 @@ public class SetResource {
             LOG.log(Level.SEVERE, "uploadDbFile(): failed.", e);
             return Response.status(Status.INTERNAL_SERVER_ERROR).build();
         }
+    }
+
+    public static boolean isGZipped(InputStream in) {
+        if (!in.markSupported()) {
+            in = new BufferedInputStream(in);
+        }
+        in.mark(2);
+        int magic = 0;
+        try {
+            magic = in.read() & 0xff | ((in.read() << 8) & 0xff00);
+            in.reset();
+        } catch (IOException e) {
+            LOG.log(Level.SEVERE, "isGZipped(): failed.", e);
+            return false;
+        }
+        return magic == GZIPInputStream.GZIP_MAGIC;
     }
 }

@@ -24,6 +24,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.zip.GZIPInputStream;
 
 import javax.enterprise.context.ApplicationScoped;
 
@@ -95,12 +96,12 @@ public class DbFileManager {
             URL website = null;
             String newDbFileName = getNewDbFileName();
             try {
-                website = new URL(DOWNLOAD_URL + getClientKey() + "/udgerdb_v3.dat");
+                website = new URL(DOWNLOAD_URL + getClientKey() + "/udgerdb_v3.dat.gz");
             } catch (MalformedURLException e) {
                 throw new UdgerException(e.getMessage());
             }
             try (FileOutputStream fos = new FileOutputStream(newDbFileName)) {
-                ReadableByteChannel rbc = Channels.newChannel(website.openStream());
+                ReadableByteChannel rbc = Channels.newChannel(new GZIPInputStream(website.openStream()));
                 fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
             }
             if (!doCheckSqlLiteFileStructure(newDbFileName)) {
