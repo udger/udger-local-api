@@ -1,21 +1,26 @@
 XFORMAT: 1A
 HOST: http://udger-webservice.org/
 
-# udger-webservice
+# udger-local-api
 
-Udger-webservice REST-API provides access to [udger-webservice](https://github.com/udger/udger-java) docker container.
+Udger-webservice REST-API provides access to [udger-webservice](https://github.com/udger/udger-local-api) docker container.
 
 # API Versions and changes
 
+## 0.1
+
+* First version available.
+
+
 # Group parse
 
-## Parse UA (user agent string) [/parse/ua/{ua}]
+## Parse User Agent string [/parse/ua/{ua}]
 
 Parse single user agent string.
 
 + Parameters
 
-    + ua: 1 (string) - base64 encoded user agent string
+    + ua: Mozilla%2F5.0+%28Windows+NT+10.0%3B+WOW64%3B+rv%3A40.0%29+Gecko%2F20100101+Firefox%2F40.0 (string) - base64 encoded user agent string
 
 ### GET
 
@@ -28,13 +33,13 @@ Get parsed user agent.
 + Response 400 (application/text)
     
 
-## Parse IP [/parse/ip/{ip}]
+## Parse IP string [/parse/ip/{ip}]
 
 Parse single IP string.
 
 + Parameters
 
-    + ip: 1 (string) - IP string
+    + ip: 108.61.199.93 (string) - IP string
 
 ### GET
 
@@ -53,8 +58,8 @@ Parse single user agent string.
 
 + Request
 
-    + ua: 1 (string) - base64 encoded user agent string
-    + ip: 1 (string) - IP string
+    + ua: Mozilla%2F5.0+%28Windows+NT+10.0%3B+WOW64%3B+rv%3A40.0%29+Gecko%2F20100101+Firefox%2F40.0 (string) - base64 encoded user agent string
+    + ip: 108.61.199.93 (string) - IP string
 
 + Response 200 (application/json)
 
@@ -76,7 +81,7 @@ Set client key used in db update operation.
 
 + Parameters
 
-    + key: XYZ (string) - client kkey
+    + key: XYZ (string) - client key
 
 ### GET
 
@@ -90,7 +95,7 @@ OK
 
 Invalid key
 
-## Set client key [/set/updatedata]
+## Update database [/set/updatedata]
 
 Update database file from http://data.udger.com/{key}
 
@@ -104,7 +109,7 @@ Update database file
 
 ## Set autoupdate time [/set/autoupdate/{time}]
 
-Set time of periodic autoupdate
+Set time of daily autoupdate
 
 + Parameters
 
@@ -112,7 +117,7 @@ Set time of periodic autoupdate
 
 ### GET
 
-Set time of periodic autoupdate
+Set time of daily autoupdate
 
 + Response 200 (application/text)
 
