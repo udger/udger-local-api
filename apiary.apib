@@ -14,7 +14,7 @@ Udger-webservice REST-API provides access to [udger-webservice](https://github.c
 
 # Group parse
 
-## Parse User Agent string [/parse/ua/{ua}]
+## User Agent Parser [/parse/ua/{ua}]
 
 Parse single user agent string.
 
@@ -33,7 +33,7 @@ Get parsed user agent.
 + Response 400 (application/text)
     
 
-## Parse IP string [/parse/ip/{ip}]
+## IP Parser [/parse/ip/{ip}]
 
 Parse single IP string.
 
@@ -52,7 +52,7 @@ Get parsed IP.
 + Response 400 (application/text)
 
     
-## Parse UA IP [/parse/ua={ua}&ip={ip}]
+## UA + IP Parser [/parse/ua={ua}&ip={ip}]
 
 Parse single user agent string.
 
@@ -75,7 +75,7 @@ Parse single user agent string.
 
 Handles database file downloading / updating.
 
-## Set client key [/set/key/{key}]
+## Client key [/set/key/{key}]
 
 Set client key used in db update operation.
 
@@ -95,9 +95,9 @@ OK
 
 Invalid key
 
-## Update database [/set/updatedata]
+## Database download [/set/updatedata]
 
-Update database file from http://data.udger.com/{key}/udgerdb_v3.dat.gz
+Update database file from `http://data.udger.com/{key}/udgerdb_v3.dat.gz`
 
 ### GET
 
@@ -107,7 +107,7 @@ Update database file
 
 + Response 400 (application/text)
 
-## Set time of daily update [/set/autoupdate/{time}]
+## Daily update [/set/autoupdate/{time}]
 
 Set time of daily autoupdate in form HH:mm
 
@@ -123,13 +123,13 @@ Set time of daily autoupdate
 
 + Response 400 (application/text)
 
-## Upload db data file [/set/datafile]
+## Database upload [/set/datafile]
 
 Upload data file. Also accepts data in gz format.
 
 # Group statistic
 
-## Set autoupdate time [/statistic]
+## Parser statistics [/statistic]
 
 Gets parser statistics.
 
