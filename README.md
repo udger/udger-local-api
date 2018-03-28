@@ -4,7 +4,7 @@ User Agent parser microservice with REST API intended to be run in Docker.
 
 ## Description
 
-Udger-local-api is application containing scalable pool of udger-parsers, application communicates via REST API. Udger-local-api can be easily embedded in Docker container and used as an microservice. Project provides basic Dockerfile based on `Alpine Linux` using highly efficient `Meecrowave` java EE microprofile.
+Udger-local-api is application containing scalable pool of udger-parsers, application communicates via REST API. Udger-local-api can be easily embedded in Docker container and used as an microservice. Project provides basic Dockerfile based on **Alpine Linux** using highly efficient **Meecrowave** java EE microprofile.
 
 ## Parts of project
 
