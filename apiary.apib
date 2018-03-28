@@ -97,7 +97,7 @@ Invalid key
 
 ## Update database [/set/updatedata]
 
-Update database file from http://data.udger.com/{key}
+Update database file from http://data.udger.com/{key}/udgerdb_v3.dat.gz
 
 ### GET
 
@@ -107,9 +107,9 @@ Update database file
 
 + Response 400 (application/text)
 
-## Set autoupdate time [/set/autoupdate/{time}]
+## Set time of daily update [/set/autoupdate/{time}]
 
-Set time of daily autoupdate
+Set time of daily autoupdate in form HH:mm
 
 + Parameters
 
@@ -125,8 +125,7 @@ Set time of daily autoupdate
 
 ## Upload db data file [/set/datafile]
 
-Set time of periodic autoupdate
-
+Upload data file. Also accepts data in gz format.
 
 # Group statistic
 
@@ -138,6 +137,14 @@ Gets parser statistics.
 
 + Response 200 (application/json)
 
+        {
+            "total_requests_ua": 989293,
+            "total_requests_ip": 271799,
+            "total_nanos_ua": 394022541322,
+            "total_nanos_ip": 367258877296,
+            "avg_throughput_ua": 2702.53,
+            "avg_throughput_ip": 791.89
+        }
 
 
 # Data Structures
