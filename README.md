@@ -15,6 +15,7 @@ Project consists of following parts:
 * [Dockerfile](https://github.com/udger/udger-local-api/blob/master/Dockerfile) based on [AlpineLinux+java8](https://hub.docker.com/r/anapsix/alpine-java/) with [Meecrowave](http://openwebbeans.apache.org/meecrowave/index.html) microprofile.
 * Simple [build&run](https://github.com/udger/udger-local-api/blob/master/buildAndRun.sh) script. Build project, build Docker image and run Docker container.
 * [Testing scripts](https://github.com/udger/udger-local-api/tree/master/utils) in Python.
+* [Hosted docker image](https://hub.docker.com/r/udgercom/udger-local-api/) on [hub.docker.com](https://hub.docker.com/)
 
 ## Quick start
 
@@ -51,4 +52,4 @@ Udger-local-api can be parameterized using following java properties:
 * `set/updatedata`
 ```
     curl -F 'file=@udgerdb_v3.dat' http://127.0.0.1:8080/udger-local-api/set/datafile
-````
+```
