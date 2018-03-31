@@ -33,3 +33,22 @@ Udger-local-api can be parameterized using following java properties:
 ## Use full udgerdb_v3.dat
 
 * replace `udgerdb_test_v3.dat` by full db `udgerdb_v3.dat` in [`Dockerfile`](https://github.com/udger/udger-local-api/blob/master/Dockerfile)
+
+## Examples
+
+* `parse/ua`
+```
+    wget http://localhost:8080/udger-local-api/parse/ua/Mozilla%2F5.0+%28Windows+NT+10.0%3B+WOW64%3B+rv%3A40.0%29+Gecko%2F20100101+Firefox%2F40.0
+```
+* `parse/ip`
+```
+    wget http://localhost:8080/udger-local-api/parse/ip/12.118.188.126
+```
+* `statistic`
+```
+    wget http://localhost:8080/udger-local-api/statistic
+```
+* `set/updatedata`
+```
+    curl -F 'file=@udgerdb_v3.dat' http://127.0.0.1:8080/udger-local-api/set/datafile
+````
