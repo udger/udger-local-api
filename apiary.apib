@@ -75,21 +75,21 @@ Parse single user agent string.
 
 Handles database file downloading / updating.
 
-## Client key [/set/key/{key}]
+## Client key [/set/key{?access_key}]
 
 Set client key used in db update operation.
 
 + Parameters
 
-    + key: XYZ (string) - client key
+    + access_key: XYZ (string) - client key
 
-### GET
+### POST
 
 Set client key
 
 + Response 200 (application/text)
 
-OK
+        OK
 
 + Response 400 (application/text)
 
@@ -99,15 +99,17 @@ Invalid key
 
 Update database file from `http://data.udger.com/{key}/udgerdb_v3.dat.gz`
 
-### GET
+### POST
 
 Update database file
 
 + Response 200 (application/text)
 
+        OK
+        
 + Response 400 (application/text)
 
-## Daily update [/set/autoupdate/{time}]
+## Daily update [/set/autoupdate{?time}]
 
 Set time of daily autoupdate in form HH:mm
 
@@ -115,18 +117,29 @@ Set time of daily autoupdate in form HH:mm
 
     + time:  10:30 (string) - set time of periodic update in form HH:mm
 
-### GET
+### POST
 
 Set time of daily autoupdate
 
 + Response 200 (application/text)
 
+        OK
+        
 + Response 400 (application/text)
 
 ## Database upload [/set/datafile]
 
-Upload data file. Also accepts data in gz format.
+Upload data file. Accepts data in gz format.
 
+### POST
+
++ Parameters
+
+    + file (file, required) - {FILE} File to upload.
+
++ Request (multipart/form-data)
+
+        
 # Group statistic
 
 ## Parser statistics [/statistic]
