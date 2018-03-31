@@ -13,6 +13,8 @@ import java.net.MalformedURLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.annotation.PostConstruct;
+import javax.ejb.Startup;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
@@ -20,6 +22,7 @@ import javax.inject.Inject;
  * PoolManager - handle ParserPool
  */
 @ApplicationScoped
+@Startup
 public class PoolManager {
 
     private static final Logger LOG =  Logger.getLogger(PoolManager.class.getName());
@@ -32,6 +35,17 @@ public class PoolManager {
     private TaskExecutor task;
     private Object updatingLock = new Object();
     private Boolean updatingDb = false;
+
+    @PostConstruct
+    public void init() {
+        String autoupdateTime = System.getProperty("udger.autoupdate.time");
+        if (autoupdateTime != null && !autoupdateTime.isEmpty()) {
+            if (!scheduleUpdateDb(autoupdateTime)) {
+                LOG.log(Level.WARNING, "Invalid daily autoupdate time=" + autoupdateTime + " Format HH:mm expected.");
+            }
+        }
+    }
+
 
     /**
      * Download DB file and restart pool
@@ -106,6 +120,7 @@ public class PoolManager {
                        }
                        task = new TaskExecutor(()-> scheduledUpdateDb(), hr, min);
                        task.start();
+                       return true;
                    }
                }
             }

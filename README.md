@@ -16,6 +16,10 @@ Project consists of following parts:
 * Simple [build&run](https://github.com/udger/udger-local-api/blob/master/buildAndRun.sh) script. Build project, build Docker image and run Docker container.
 * [Testing scripts](https://github.com/udger/udger-local-api/tree/master/utils) in Python.
 
+## Quick start
+
+* Run [`buildAndRun.sh`](https://github.com/udger/udger-local-api/blob/master/buildAndRun.sh) script
+
 ## Application parameters
 
 Udger-local-api can be parameterized using following java properties:
@@ -24,10 +28,7 @@ Udger-local-api can be parameterized using following java properties:
 * `-Dudger.cachesize=N` where `N` is number of items in parser LRU cache. Default is `10000`
 * `-Dudger.clientkey=KEY` where `KEY` is client key used for access dbfile from `http://data.udger.com/`. Default value is empty.
 * `-Dudger.db=dbFile` where `dbFile` is path to database file. Default value is `/udgerdb/udgerdb_v3.dat`.
-
-## Quick start
-
-* Run [`buildAndRun.sh`](https://github.com/udger/udger-local-api/blob/master/buildAndRun.sh) script
+* `-Dudger.autoupdate.time=4:42` schedule daily auto update time to 4:42 (HH:mm format).
 
 ## Use full udgerdb_v3.dat
 

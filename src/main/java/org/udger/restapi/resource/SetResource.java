@@ -18,11 +18,10 @@ import java.util.zip.GZIPInputStream;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -48,15 +47,15 @@ public class SetResource {
     /**
      * Sets the client key.
      *
-     * @param key the new client key
+     * @param accessKey the new client key
      * @return the response
      */
-    @GET
-    @Path("/key/{key}")
+    @POST
+    @Path("/key")
     @Produces(MediaType.TEXT_PLAIN)
-    public Response setKey(@PathParam("key") String key) {
-        if (key != null && !key.isEmpty()) {
-            dbFileManager.setClientKey(key);
+    public Response setKey(@QueryParam("access_key") String accessKey) {
+        if (accessKey != null && !accessKey.isEmpty()) {
+            dbFileManager.setClientKey(accessKey);
             return Response.ok("OK").build();
         }
         return Response.status(Status.BAD_REQUEST).build();
@@ -67,7 +66,7 @@ public class SetResource {
      *
      * @return the response
      */
-    @GET
+    @POST
     @Path("/updatedata")
     @Produces(MediaType.TEXT_PLAIN)
     public Response updateData() {
@@ -90,10 +89,10 @@ public class SetResource {
      * @param time the time
      * @return the response
      */
-    @GET
-    @Path("/autoupdate/{time}")
+    @POST
+    @Path("/autoupdate")
     @Produces(MediaType.TEXT_PLAIN)
-    public Response autoUpdate(@PathParam("time") String time) {
+    public Response autoUpdate(@QueryParam("time") String time) {
         if (poolManager.scheduleUpdateDb(time)) {
             return Response.ok("OK").build();
         }
