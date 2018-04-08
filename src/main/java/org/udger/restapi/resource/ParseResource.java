@@ -15,6 +15,7 @@ import java.util.logging.Logger;
 
 import javax.inject.Inject;
 import javax.json.Json;
+import javax.json.JsonBuilderFactory;
 import javax.json.JsonObjectBuilder;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -38,6 +39,8 @@ import org.udger.restapi.service.UdgerException;
 public class ParseResource {
 
     private static final Logger LOG =  Logger.getLogger(ParseResource.class.getName());
+
+    private static final JsonBuilderFactory jbf = Json.createBuilderFactory(null);
 
     @Inject
     private ParserService parserService;
@@ -143,7 +146,7 @@ public class ParseResource {
                 return Response.status(Status.BAD_REQUEST).build();
             }
 
-            JsonObjectBuilder jsonBuilder = Json.createObjectBuilder();
+            JsonObjectBuilder jsonBuilder = jbf.createObjectBuilder();
 
             if (uaJson != null) {
                 jsonBuilder.add("user_agent", uaJson);
@@ -179,7 +182,7 @@ public class ParseResource {
 
         if (ua != null && ua.length() > 0) {
 
-            JsonObjectBuilder jsonBuilder = Json.createObjectBuilder();
+            JsonObjectBuilder jsonBuilder = jbf.createObjectBuilder();
 
             UdgerUaResult uaResult = parserService.parseUa(ua);
 
@@ -211,7 +214,7 @@ public class ParseResource {
                 .add("os_family_code", uaResult.getOsFamilyCode())
                 .add("os_family_vendor", uaResult.getOsFamilyVendor())
                 .add("os_family_vendor_code", uaResult.getOsFamilyVendorCode())
-                .add("os_family_vendor_homepage", uaResult.getOsFamilyVedorHomepage())
+                .add("os_family_vendor_homepage", uaResult.getOsFamilyVendorHomepage())
                 .add("device_class", uaResult.getDeviceClass())
                 .add("device_class_code", uaResult.getDeviceClassCode())
                 .add("device_class_icon", uaResult.getDeviceClassIcon())
@@ -238,7 +241,7 @@ public class ParseResource {
 
         if (ip != null && ip.length() > 0) {
 
-            JsonObjectBuilder jsonBuilder = Json.createObjectBuilder();
+            JsonObjectBuilder jsonBuilder = jbf.createObjectBuilder();
 
             UdgerIpResult ipResult = parserService.parseIp(ip);
 
