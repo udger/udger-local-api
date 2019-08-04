@@ -27,7 +27,7 @@ public class TaskExecutor {
     private ScheduledFuture<?> scheduled;
     private Runnable task;
     boolean started = false;
-    boolean canceled = false;
+    volatile boolean canceled = false;
     private final int targetHour;
     private final int targetMin;
 

@@ -39,9 +39,9 @@ public class DbFileManager {
     private static final String DEFAULT_FILE_NAME = "/udgerdb/udgerdb_v3.dat";
     private static final String DOWNLOAD_URL = "http://data.udger.com/";
 
-    private String dbFileName;
+    private volatile String dbFileName;
     private String clientKey;
-    private boolean clientKeyLoaded;
+    private volatile boolean clientKeyLoaded;
 
     /**
      * Gets the client key.
