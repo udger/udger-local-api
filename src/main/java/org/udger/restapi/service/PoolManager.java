@@ -34,7 +34,7 @@ public class PoolManager {
 
     private TaskExecutor task;
     private Object updatingLock = new Object();
-    private Boolean updatingDb = false;
+    private volatile boolean updatingDb = false;
 
     @PostConstruct
     public void init() {
