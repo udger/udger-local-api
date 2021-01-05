@@ -1,6 +1,6 @@
 FROM anapsix/alpine-java:8_jdk-dcevm
 LABEL maintainer="udger.com" description="Udger local parser"
-ENV MEECROWAVE_ARCHIVE meecrowave-core-1.2.1-runner
+ENV MEECROWAVE_ARCHIVE meecrowave-core-1.2.7-runner
 ENV INSTALL_DIR /opt
 RUN apk -U upgrade \
     && apk add curl \
