@@ -16,6 +16,8 @@ import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.ejb.Startup;
 import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.Initialized;
+import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 
 /**
@@ -36,8 +38,7 @@ public class PoolManager {
     private Object updatingLock = new Object();
     private volatile boolean updatingDb = false;
 
-    @PostConstruct
-    public void init() {
+    public void init(@Observes @Initialized(ApplicationScoped.class) Object init) {
         String autoupdateTime = System.getProperty("udger.autoupdate.time");
         if (autoupdateTime != null && !autoupdateTime.isEmpty()) {
             if (!scheduleUpdateDb(autoupdateTime)) {
@@ -120,9 +121,12 @@ public class PoolManager {
                        }
                        task = new TaskExecutor(()-> scheduledUpdateDb(), hr, min);
                        task.start();
+                       LOG.log(Level.INFO, "Update DB task scheduled for " + at);
                        return true;
                    }
                }
+            } else {
+                LOG.log(Level.WARNING, "Invalid schedule time format=" + at + " Time format \"HH:mm\" expected.");
             }
         }
         return false;
