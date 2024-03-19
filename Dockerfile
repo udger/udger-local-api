@@ -1,4 +1,4 @@
-FROM anapsix/alpine-java:8_jdk-dcevm
+FROM adoptopenjdk/openjdk8:alpine as common
 LABEL maintainer="udger.com" description="Udger local parser"
 ENV MEECROWAVE_ARCHIVE meecrowave-core-1.2.15-runner
 ENV INSTALL_DIR /opt
