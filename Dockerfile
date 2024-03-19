@@ -1,10 +1,10 @@
 FROM anapsix/alpine-java:8_jdk-dcevm
 LABEL maintainer="udger.com" description="Udger local parser"
-ENV MEECROWAVE_ARCHIVE meecrowave-core-1.2.10-runner
+ENV MEECROWAVE_ARCHIVE meecrowave-core-1.2.15-runner
 ENV INSTALL_DIR /opt
 RUN apk -U upgrade \
     && apk add curl \
-    && curl -o ${INSTALL_DIR}/${MEECROWAVE_ARCHIVE}.jar -L https://repo1.maven.org/maven2/org/apache/meecrowave/meecrowave-core/1.2.10/meecrowave-core-1.2.10-runner.jar
+    && curl -o ${INSTALL_DIR}/${MEECROWAVE_ARCHIVE}.jar -L https://repo1.maven.org/maven2/org/apache/meecrowave/meecrowave-core/1.2.15/meecrowave-core-1.2.15-runner.jar
 ENV MEECROWAVE_HOME ${INSTALL_DIR}
 ENV DEPLOYMENT_DIR ${MEECROWAVE_HOME}
 WORKDIR ${INSTALL_DIR}
