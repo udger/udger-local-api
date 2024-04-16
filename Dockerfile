@@ -4,7 +4,7 @@ ENV MEECROWAVE_ARCHIVE meecrowave-core-1.2.15-runner
 ENV INSTALL_DIR /opt
 RUN apk -U upgrade \
     && apk add curl \
-    && curl -o ${INSTALL_DIR}/${MEECROWAVE_ARCHIVE}.jar -L https://repo1.maven.org/maven2/org/apache/meecrowave/meecrowave-core/1.2.15/meecrowave-core-1.2.15-runner.jar
+    && curl -o ${INSTALL_DIR}/${MEECROWAVE_ARCHIVE}.jar -L https://github.com/udger/openwebbeans-meecrowave/releases/download/1.2.16-SNAPSHOT/meecrowave-core-1.2.16-SNAPSHOT-runner.jar
 ENV MEECROWAVE_HOME ${INSTALL_DIR}
 ENV DEPLOYMENT_DIR ${MEECROWAVE_HOME}
 WORKDIR ${INSTALL_DIR}
