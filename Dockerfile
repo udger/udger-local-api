@@ -1,6 +1,6 @@
 FROM eclipse-temurin:8-alpine as common
 LABEL maintainer="udger.com" description="Udger local parser"
-ENV MEECROWAVE_ARCHIVE meecrowave-core-1.2.15-runner
+ENV MEECROWAVE_ARCHIVE meecrowave-core-1.2.16-SNAPSHOT-runner
 ENV INSTALL_DIR /opt
 RUN apk -U upgrade \
     && apk add curl \
